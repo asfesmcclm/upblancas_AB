@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Censo Empresas Blancas Albacete 2026</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #c0001e;
+      --red-dim: rgba(192,0,30,0.12);
+      --fica-color: #0284c7;
+      --fica-bg: #f0f9ff;
+      --fica-border: #bae6fd;
+      --fesmc-color: #d97706;
+      --fesmc-bg: #fffbeb;
+      --fesmc-border: #fde68a;
+      --sp-color: #dc2626;
+      --sp-bg: #fef2f2;
+      --sp-border: #fecaca;
+      --bg: #f4f5f8;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-2: #475569;
+      --text-3: #94a3b8;
+      --border: #e2e8f0;
+      --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.05);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+      --radius: 16px;
+      --font: 'Outfit', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100dvh; overscroll-behavior: none; }
+
+    .header {
+      background: linear-gradient(160deg, #1a0005 0%, #3d0010 50%, #c0001e 100%);
+      padding: 48px 20px 28px;
+      padding-top: max(48px, calc(env(safe-area-inset-top) + 20px));
+      position: relative;
+      overflow: hidden;
+    }
+    .header-logo-bg {
+      position: absolute; inset: 0;
+      background-image: url('logo-ugt.jpg');
+      background-size: 320px auto; background-repeat: no-repeat;
+      background-position: right -20px center; opacity: 0.09;
+      filter: grayscale(100%) contrast(1.2); z-index: 0;
+    }
+    .header-logo-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(26,0,5,1) 0%, rgba(26,0,5,0.7) 50%, rgba(26,0,5,0.0) 100%);
+    }
+    .header-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+    .logo-badge { display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 5px 12px; font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.9); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+    .header h1 { font-size: clamp(22px, 6vw, 36px); font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.02em; }
+    .header h1 span { color: rgba(255,180,170,0.9); }
+    .header-sub { margin-top: 6px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55); }
+
+    .search-zone { position: sticky; top: 0; z-index: 100; background: linear-gradient(to bottom, rgba(26,0,5,0.95) 0%, rgba(244,245,248,0.97) 100%); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 14px 16px 12px; }
+    .search-wrap { max-width: 680px; margin: 0 auto; }
+    .search-box { position: relative; display: flex; align-items: center; background: #fff; border-radius: 14px; border: 2px solid var(--border); box-shadow: var(--shadow-lg); transition: 0.2s; overflow: hidden; }
+    .search-box:focus-within { border-color: var(--red); box-shadow: 0 0 0 4px var(--red-dim), var(--shadow-lg); }
+    .search-icon { width: 48px; display: flex; align-items: center; justify-content: center; color: var(--text-3); }
+    #buscador { flex: 1; border: none; outline: none; font-family: var(--font); font-size: 16px; font-weight: 500; color: var(--text); padding: 14px 0; }
+    
+    .filters-row { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+    .filter-pill { flex-shrink: 0; border-radius: 50px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; background: #fff; border: 1.5px solid var(--border); transition: 0.2s; }
+    .filter-pill.active-all { background: var(--text); color: #fff; border-color: var(--text); }
+    .filter-pill.active-fica { background: var(--fica-color); color: #fff; border-color: var(--fica-color); }
+    .filter-pill.active-fesmc { background: var(--fesmc-color); color: #fff; border-color: var(--fesmc-color); }
+    .filter-pill.active-sp { background: var(--sp-color); color: #fff; border-color: var(--sp-color); }
+
+    .meta-bar { max-width: 680px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 16px; }
+    .stats-count { font-size: 13px; font-weight: 600; padding-bottom: 5px; }
+    
+    .meta-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+    
+    .btn-help {
+      display: flex; align-items: center; gap: 6px; background: #f0f7ff; color: #0369a1; 
+      border: 1.5px solid #e0f2fe; padding: 5px 12px; border-radius: 8px; 
+      font-size: 10px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase;
+      text-decoration: none;
+    }
+    .btn-help:hover { background: #e0f2fe; border-color: #bae6fd; }
+
+    .btn-export { 
+      display: flex; align-items: center; gap: 6px; background: #fff; color: var(--text-2); 
+      border: 1.5px solid var(--border); padding: 6px 12px; border-radius: 8px; 
+      font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase;
+    }
+    .btn-export:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+    .btn-export svg { width: 14px; height: 14px; }
+
+    .content { max-width: 680px; margin: 0 auto; padding: 12px 16px 100px; }
+    .empresa-list { display: flex; flex-direction: column; gap: 16px; }
+    .empresa-card { background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .empresa-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+    .type-fica::before { background: var(--fica-color); }
+    .type-fesmc::before { background: var(--fesmc-color); }
+    .type-sp::before { background: var(--sp-color); }
+
+    .card-inner { padding: 16px; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .card-empresa { font-size: 15px; font-weight: 800; text-transform: uppercase; line-height: 1.2; flex: 1; }
+    
+    .card-trab-block { text-align: right; min-width: 60px; }
+    .card-trab-num { font-family: var(--mono); font-size: 24px; font-weight: 700; line-height: 1; }
+    .card-trab-label { font-size: 9px; font-weight: 700; color: var(--text-3); text-transform: uppercase; }
+
+    .card-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .card-badge { padding: 3px 9px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .fica { background: var(--fica-bg); color: var(--fica-color); }
+    .fesmc { background: var(--fesmc-bg); color: var(--fesmc-color); }
+    .sp { background: var(--sp-bg); color: var(--sp-color); }
+    .badge-cnae { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
+
+    .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .label-with-icon { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+    .label-icon { width: 14px; height: 14px; color: var(--text-3); stroke-width: 2.5; }
+    .info-label { font-size: 10px; font-weight: 700; color: var(--text-3); text-transform: uppercase; }
+    .info-value { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .info-value.mono { font-family: var(--mono); font-size: 11.5px; }
+
+    .card-desc-cnae { grid-column: span 2; padding: 10px; background: var(--bg); border-radius: 8px; border-left: 3px solid var(--border); font-size: 12px; font-style: italic; color: var(--text-2); line-height: 1.4; margin-top: 4px; }
+
+    .card-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .card-btn { padding: 10px; border-radius: 10px; border: none; font-size: 10px; font-weight: 800; cursor: pointer; text-align: center; text-transform: uppercase; }
+    .maps { background: var(--text); color: #fff; }
+    .whatsapp { background: #16a34a; color: #fff; }
+    .google { background: var(--bg); color: var(--text-2); border: 1px solid var(--border); }
+
+    .load-more-wrap { display: flex; justify-content: center; margin-top: 30px; padding-bottom: 20px; }
+    #btn-cargar-mas { 
+      background: #fff; color: var(--text); border: 2px solid var(--border);
+      padding: 14px 32px; border-radius: 50px; font-size: 14px; font-weight: 800;
+      text-transform: uppercase; cursor: pointer; transition: 0.2s;
+      box-shadow: var(--shadow);
+    }
+    #btn-cargar-mas:hover { border-color: var(--red); color: var(--red); transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-logo-bg"></div>
+    <div class="header-inner">
+      <div class="logo-badge">UGT Castilla-La Mancha</div>
+      <h1>Censo Empresas <span>Blancas</span> Albacete 2026</h1>
+      <p class="header-sub">Base de datos interactiva de empresas</p>
+    </div>
+  </header>
+
+  <div class="search-zone">
+    <div class="search-wrap">
+      <div class="search-box">
+        <div class="search-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </div>
+        <input type="search" id="buscador" placeholder="Buscar por empresa, localidad, CNAE...">
+      </div>
+      <div class="filters-row" id="filtros">
+        <button class="filter-pill active-all" data-fed="TODAS">Todas</button>
+        <button class="filter-pill" data-fed="FICA">● FICA</button>
+        <button class="filter-pill" data-fed="FESMC">● FESMC</button>
+        <button class="filter-pill" data-fed="SP">● SP</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="meta-bar">
+    <span class="stats-count" id="stats-bar"> Cargando...</span>
+    <div class="meta-actions">
+      <a href="https://asfesmcclm.github.io/rutaempresas/cnae.html" target="_blank" class="btn-help">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        Ayuda CNAE
+      </a>
+      <button class="btn-export" onclick="exportarCSV()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Exportar
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="empresa-list" id="lista-empresas"></div>
+    <div class="load-more-wrap">
+      <button id="btn-cargar-mas" style="display: none;">Cargar más empresas</button>
+    </div>
+  </div>
+
+  <script src="datos.js"></script>
+  <script>
+    const buscador = document.getElementById('buscador');
+    const lista = document.getElementById('lista-empresas');
+    const statsBar = document.getElementById('stats-bar');
+    const btnMas = document.getElementById('btn-cargar-mas');
+    
+    let filtroActivo = 'TODAS';
+    let limiteActual = 60;
+    let datosFiltradosGlobal = [];
+
+    function fedClass(fed) {
+      if (!fed) return '';
+      const f = fed.toUpperCase();
+      if (f.includes('FESMC')) return 'fesmc';
+      if (f.includes('FICA')) return 'fica';
+      if (f.includes('SP') || f.includes('PÚBLICOS')) return 'sp';
+      return 'fica';
+    }
+
+    function limpiarNumCalle(dir) {
+      if (!dir) return '';
+      return dir.replace(/\b0+(\d+)\b/g, '$1');
+    }
+
+    function normalizarLocalidad(str) {
+      if (!str) return '';
+      return str.toLowerCase()
+        .replace(/\(|\)/g, '')
+        .replace(/\b(el|la|los|las|de|del)\b/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function render(resetLimite = true) {
+      if (typeof empresas === 'undefined') return;
+      if (resetLimite) limiteActual = 60;
+
+      const rawQ = buscador.value.toLowerCase().trim();
+      const qNorm = normalizarLocalidad(rawQ);
+      
+      datosFiltradosGlobal = empresas.filter(e => {
+        const locNorm = normalizarLocalidad(e.localidad);
+        const matchQ = !rawQ || 
+          e.empresa.toLowerCase().includes(rawQ) || 
+          locNorm.includes(qNorm) || 
+          (e.cnae || '').toString().includes(rawQ) ||
+          (e.desc_cnae || '').toLowerCase().includes(rawQ);
+
+        const fedKey = (e.federacion || '').toUpperCase();
+        const matchF = filtroActivo === 'TODAS' || fedKey.includes(filtroActivo);
+        return matchQ && matchF;
+      }).sort((a, b) => b.trabajadores - a.trabajadores);
+
+      const totalTrab = datosFiltradosGlobal.reduce((s, e) => s + (e.trabajadores || 0), 0);
+      statsBar.innerHTML = `<strong>${datosFiltradosGlobal.length}</strong> emp. · <strong>${totalTrab.toLocaleString('es-ES')}</strong> TRAB.`;
+
+      const visibles = datosFiltradosGlobal.slice(0, limiteActual);
+      
+      if (datosFiltradosGlobal.length > limiteActual) {
+        btnMas.style.display = 'block';
+        btnMas.textContent = `Cargar más (${datosFiltradosGlobal.length - limiteActual} restantes)`;
+      } else {
+        btnMas.style.display = 'none';
+      }
+
+      lista.innerHTML = visibles.map(e => {
+        const cls = fedClass(e.federacion);
+        const dirLimpia = limpiarNumCalle(e.direccion);
+        const cpStr = e.cp ? `, ${e.cp}` : '';
+        const queryMaps = encodeURIComponent(`${dirLimpia}, ${e.localidad}${cpStr}, Albacete, España`);
+        const queryGoo = encodeURIComponent(`${e.empresa} ${e.localidad}`);
+        const empEscaped = e.empresa.replace(/"/g, '"');
+        const descEscaped = (e.desc_cnae || '').replace(/"/g, '"');
+        
+        return `
+          <div class="empresa-card type-${cls}">
+            <div class="card-inner">
+              <div class="card-top">
+                <div class="card-empresa">${e.empresa}</div>
+                <div class="card-trab-block">
+                  <div class="card-trab-num">${e.trabajadores}</div>
+                  <div class="card-trab-label">TRAB.</div>
+                </div>
+              </div>
+              <div class="card-badges">
+                <span class="card-badge ${cls}">${e.federacion}</span>
+                <span class="card-badge badge-cnae">CNAE ${e.cnae}</span>
+              </div>
+              <div class="card-grid">
+                <div>
+                  <div class="label-with-icon">
+                    <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <div class="info-label">Ubicación</div>
+                  </div>
+                  <div class="info-value">${e.localidad}</div>
+                  <div class="info-value" style="font-weight:400; font-size:11px; color:var(--text-2);">${dirLimpia}</div>
+                  <div class="info-value" style="font-weight:400; font-size:11px; color:var(--text-2);">${e.cp} ${e.provincia}</div>
+                </div>
+                <div>
+                  <div class="label-with-icon">
+                    <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>
+                    <div class="info-label">Identificación</div>
+                  </div>
+                  <div class="info-value mono" style="font-size:11px;">CIF: ${e.cif}</div>
+                  <div class="info-value mono" style="font-size:11px;">SS: ${e.ssocial}</div>
+                </div>
+                <div class="card-desc-cnae">${e.desc_cnae}</div>
+              </div>
+              <div class="card-actions">
+                <button class="card-btn maps" onclick="window.open('https://www.google.com/maps/search/?api=1&query=${queryMaps}', '_blank')">Ruta</button>
+                <button class="card-btn whatsapp" 
+                  data-emp="${empEscaped}" 
+                  data-cif="${e.cif}" 
+                  data-fed="${e.federacion}"
+                  data-loc="${e.localidad}"
+                  data-dir="${dirLimpia}"
+                  data-cp="${e.cp}"
+                  data-cnae="${e.cnae}"
+                  data-desc="${descEscaped}"
+                  onclick="compartirBtn(this)">WhatsApp</button>
+                <button class="card-btn google" onclick="window.open('https://www.google.com/search?q=${queryGoo}', '_blank')">Google</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function exportarCSV() {
+      if (datosFiltradosGlobal.length === 0) return;
+      const headers = ["Empresa", "Direccion", "Localidad", "CP", "Provincia", "Seguridad Social", "CIF", "Trabajadores", "CNAE", "Desc_CNAE", "Federacion"];
+      const rows = datosFiltradosGlobal.map(e => [
+        `"${e.empresa}"`, `"${e.direccion}"`, `"${e.localidad}"`, `"${e.cp}"`, `"${e.provincia}"`, `"${e.ssocial}"`, `"${e.cif}"`, e.trabajadores, `"${e.cnae}"`, `"${e.desc_cnae}"`, `"${e.federacion}"`
+      ]);
+      let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+      csvContent += headers.join(";") + "\r\n";
+      rows.forEach(row => { csvContent += row.join(";") + "\r\n"; });
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Censo_Blancas_AB_${filtroActivo}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function compartirBtn(btn) {
+      const d = btn.dataset;
+      const texto = [
+        `*DATOS DE EMPRESA*`,
+        `--------------------------`,
+        `*Empresa:* ${d.emp}`,
+        `*CIF:* ${d.cif}`,
+        `*Federación:* ${d.fed}`,
+        ``,
+        `*UBICACIÓN*`,
+        `*Localidad:* ${d.loc}`,
+        `*Dirección:* ${d.dir}`,
+        `*CP:* ${d.cp}`,
+        ``,
+        `*ACTIVIDAD*`,
+        `*CNAE:* ${d.cnae}`,
+        `*Descripción:* ${d.desc}`,
+        `--------------------------`,
+        `_Enviado desde Censo Empresas Blancas Albacete 2026_`
+      ].join('\n');
+      const msg = encodeURIComponent(texto);
+      window.open(`https://api.whatsapp.com/send?text=${msg}`, '_blank');
+    }
+
+    buscador.addEventListener('input', () => render(true));
+    document.getElementById('filtros').addEventListener('click', e => {
+      if (e.target.classList.contains('filter-pill')) {
+        filtroActivo = e.target.dataset.fed;
+        document.querySelectorAll('.filter-pill').forEach(btn => btn.className = 'filter-pill');
+        const mapCls = { TODAS: 'active-all', FICA: 'active-fica', FESMC: 'active-fesmc', SP: 'active-sp' };
+        e.target.classList.add(mapCls[filtroActivo] || 'active-all');
+        render(true);
+      }
+    });
+    btnMas.addEventListener('click', () => {
+      limiteActual += 60;
+      render(false);
+    });
+
+    window.onload = () => setTimeout(() => render(true), 100);
+  </script>
+</body>
+</html>
